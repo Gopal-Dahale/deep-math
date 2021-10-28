@@ -5,6 +5,7 @@ from deep_math.data.math_data_module import MathDataModule
 from argparse import ArgumentParser
 from deep_math.util import build_model, collate_fn
 from deep_math import lit_models
+import wandb
 import warnings
 
 warnings.filterwarnings('ignore')
@@ -52,7 +53,8 @@ def main():
     if torch.cuda.is_available():
         gpus = -1  # all available GPUs
 
-    logger = pl.loggers.TensorBoardLogger("training/logs")
+    logger = pl.loggers.WandbLogger()
+    logger.watch(model)
     early_stopping_callback = pl.callbacks.EarlyStopping(monitor="val_loss",
                                                          mode="min",
                                                          patience=10)
