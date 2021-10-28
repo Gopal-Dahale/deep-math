@@ -66,8 +66,8 @@ def main():
     callbacks = [early_stopping_callback, model_checkpoint_callback]
 
     trainer = pl.Trainer(gpus=gpus,
-                         fast_dev_run=True,
-                         max_epochs=1,
+                         fast_dev_run=False,
+                         max_epochs=100,
                          logger=logger,
                          callbacks=callbacks,
                          weights_save_path='training/logs',
