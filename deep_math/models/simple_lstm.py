@@ -25,16 +25,21 @@ class SimpleLSTM(nn.Module):
 
         x = x.float()  # (max_q_sz, batch_sz, vocab_sz)
 
+        # type_as(x) is required for setting the device (cuda or cpu)
+        # https://forums.pytorchlightning.ai/t/training-fails-but-found-at-least-two-devices-cuda-0-and-cpu/694
+
         hidden_state = Variable(
-            torch.zeros(1, batch_size, self.num_hidden, dtype=torch.float))
+            torch.zeros(1, batch_size, self.num_hidden,
+                        dtype=torch.float)).type_as(x)
         cell_state = Variable(
-            torch.zeros(1, batch_size, self.num_hidden, dtype=torch.float))
+            torch.zeros(1, batch_size, self.num_hidden,
+                        dtype=torch.float)).type_as(x)
         output_seq = torch.empty(
-            (self.max_answer_sz - 1, batch_size, self.vocab_sz))
+            (self.max_answer_sz - 1, batch_size, self.vocab_sz)).type_as(x)
         thinking_input = torch.zeros(1,
                                      batch_size,
                                      self.vocab_sz,
-                                     dtype=torch.float)
+                                     dtype=torch.float).type_as(x)
 
         # Input question phase
         self.lstm.flatten_parameters()
